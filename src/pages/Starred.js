@@ -28,7 +28,6 @@ const Starred = () => {
     }
   }, [starred]);
 
-  console.log(shows);
   return (
     <MainPageLayout>
       {isLoading && <div>Shows are still loading</div>}
