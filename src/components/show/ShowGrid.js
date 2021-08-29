@@ -11,6 +11,7 @@ const ShowGrid = ({ data }) => {
   // showId and isStarred are received from call in ShowCard.js
   const onStarClick = useCallback(
     (showId, isStarred) => {
+      console.log(showId);
       if (isStarred) {
         dispatchStarred({ type: 'REMOVE', showId });
       } else {
