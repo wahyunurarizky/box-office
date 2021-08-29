@@ -12,7 +12,13 @@ import {
   SearchInput,
 } from './Home.styled';
 
-const renderResult = results => {
+const renderResult = (results, isLoading, error) => {
+  if (error) {
+    return <div>Error</div>;
+  }
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
   if (results && results.length === 0) {
     return <div>No Results</div>;
   }
@@ -29,14 +35,22 @@ const renderResult = results => {
 const Home = () => {
   const [input, setInput] = useLastQuery();
   const [results, setResults] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [searchOption, setSearchOption] = useState('shows');
 
   const isShowsSearch = searchOption === 'shows';
 
   const onSearch = () => {
-    apiGet(`/search/${searchOption}?q=${input}`).then(result => {
-      setResults(result);
-    });
+    setIsLoading(true);
+    apiGet(`/search/${searchOption}?q=${input}`)
+      .then(result => {
+        setResults(result);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+      });
   };
 
   const onInputChange = useCallback(
@@ -93,7 +107,7 @@ const Home = () => {
           Search
         </button>
       </SearchButtonWrapper>
-      {renderResult(results)}
+      {renderResult(results, isLoading, error)}
     </MainPageLayout>
   );
 };
